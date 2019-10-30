@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<constant name="struts.multipart.maxSize" value="50000000"/>
+	<package name="default" namespace="/" extends="struts-default">
+		<default-action-ref name="error"></default-action-ref>
+		<action name="error">
+			<result>/page/user/error.jsp</result>
+		</action>
+	</package>
+	<package name="pims" namespace="/" extends="struts-default">
+		<action name="login" class="ldu.login.LoginAction">
+			<result name="input">/page/user/login.jsp</result>
+			<result name="loginUserSuccess" type="chain">user_index</result>
+			<result name="loginAdminSuccess">/page/admin/index.jsp</result>
+			<result name="loginFail">/page/user/login.jsp</result>
+		</action>
+		<action name="regist" class="ldu.login.RegistAction">
+			<result name="registSuccess">/page/user/login.jsp</result>
+			<result name="registFail">/page/user/regist.jsp</result>
+		</action>
+		<action name="user_*" class="ldu.user.action.UserAction" method="{1}">
+			<result name="indexSuccess">/page/user/index.jsp</result>
+			<result name="adminIndexSuccess">/page/admin/index.jsp</result>
+			<result name="othersSuccess">/page/user/index_others.jsp</result>
+			<result name="homeSuccess">/page/user/home.jsp</result>
+			<result name="settingSuccess">/page/user/setting.jsp</result>
+			<result name="updateSuccess" type="chain">user_setting</result>
+			<result name="headshowSuccess">/page/user/face.jsp</result>
+			<interceptor-ref name="fileUpload">
+                <param name="maximumSize">10240000000</param>
+                <param name="allowedTypes">
+                	image/gif,image/png,image/jpg
+                </param>   
+            </interceptor-ref>
+            <interceptor-ref name="defaultStack"/>
+            <param name="savePath">/files</param>
+            <result name="fileupSuccess" type="chain">user_home</result>
+		</action>
+		<action name="video_*" class="ldu.video.action.VideoAction" method="{1}">
+			<interceptor-ref name="fileUpload">
+                <param name="maximumSize">10240000000</param>
+                <param name="allowedTypes">
+                	image/gif,image/png,image/jpg,video/mp4
+                </param>   
+            </interceptor-ref>
+            <interceptor-ref name="defaultStack"/>
+            <param name="savePath">/files</param>
+			<result name="uploadSuccess">/page/user/upload.jsp</result>
+			<result name="uploadvideoSuccess">/page/user/uploadSuc.jsp</result>
+			<result name="articleSuccess">/page/user/article.jsp</result>
+			<result name="deleteVideoSuccess" type="chain">video_article</result>
+			<result name="deleteVideosSuccess" type="chain">video_article</result>
+			<result name="articlezeroSuccess">/page/user/article_zero.jsp</result>
+			<result name="videoSuccess">/page/user/video.jsp</result>
+			<result name="searchSuccess">/page/user/index_search.jsp</result>
+		</action>
+		<action name="comment_*" class="ldu.comments.action.CommentsAction" method="{1}">
+			<result name="addCommentsSuccess" type="redirectAction">video_video?vid=${video.id}</result>
+			<result name="InfoSuccess">/page/admin/index.jsp</result>
+		</action>
+		<action name="collection_*" class="ldu.collection.action.CollectionAction" method="{1}">
+			<result name="indexSuccess">/page/user/favlist.jsp</result>
+		</action>
+		<action name="notice_*" class="ldu.notice.action.NoticeAction" method="{1}">
+			<result name="articleSuccess">/page/user/notice.jsp</result>
+			<result name="moreSuccess">/page/user/morenotices.jsp</result>
+		</action>
+		<action name="videoInfo*" class="ldu.video.action.VideoInfoAction" method="{1}">
+			<result name="success">/page/admin/videoComments.jsp</result>
+			<result name="csuccess" type="chain">videoInfore</result>
+			<result name="re">/page/admin/videoManage.jsp</result>
+			<result name="dsuccess" type="chain">videoInfode</result>	
+			<result name="de">/page/admin/videoDelete.jsp</result>				
+			<result name="dcesuccess" type="chain">videoInfodce</result>
+			<result name="dce">/page/admin/videoDelete.jsp</result>
+			<result name="videoInfoSuccess">/page/admin/videoInfo.jsp</result>		
+		</action>
+		<action name="comments*" class="ldu.comments.action.CommentsAction" method="{1}">
+			<result name="dsuccess" type="chain">commentscod</result>
+			<result name="cod">/page/admin/commentsManage.jsp</result>
+			<result name="dcesuccess" type="chain">commentsdce</result>
+			<result name="dce">/page/admin/commentsManage.jsp</result>	
+		</action>
+		<action name="noticeInfo" class="ldu.notice.action.NoticeAction">
+			<result name="success">/page/admin/index.jsp</result>
+		</action>
+		<action name="sendEmail" class="ldu.email.action.EmailAction">
+			<result name="success">/page/admin/index.jsp</result>
+		</action>
+		<action name="email_*" class="ldu.email.action.EmailAction"  method="{1}">
+		</action>
+	</package>
+</struts>    
